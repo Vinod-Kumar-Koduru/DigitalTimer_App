@@ -29,23 +29,20 @@ class DigitalTimer extends Component {
 
   incrementTimeElapsedInSeconds = () => {
     const {seconds} = this.state
-    if (seconds > 59) {
-      this.setState({seconds: 0})
+    if (seconds <= 0) {
+      this.setState({seconds: 59})
     } else {
-      this.setState(prev => ({seconds: prev.seconds + 1}))
+      this.setState(prev => ({seconds: prev.seconds - 1}))
     }
   }
 
   startTimerOrPause = () => {
     const {timeInmin, seconds, isTimeRunning, id} = this.state
-    if (seconds > 59) {
-      this.setState({seconds: 0})
-    }
     if (isTimeRunning) {
       clearInterval(id)
     } else {
       const intervel = setInterval(this.incrementTimeElapsedInSeconds, 1000)
-      this.setState({id: intervel})
+      this.setState(prev => ({id: intervel, timeInmin: prev.timeInmin - 1}))
     }
     this.setState(prev => ({isTimeRunning: !prev.isTimeRunning}))
   }
@@ -57,7 +54,7 @@ class DigitalTimer extends Component {
 
   timerdec = () => {
     const {timeInmin} = this.state
-    this.setState(pre => ({timeInmin: (pre.timeInmin -= 1)}))
+    this.setState(pre => ({timeInmin: pre.timeInmin - 1}))
   }
 
   restTimer = () => {
@@ -67,7 +64,7 @@ class DigitalTimer extends Component {
   }
 
   render() {
-    const {timeInmin, seconds, isTimeRunning, timeElnca, secElnc} = this.state
+    const {isTimeRunning} = this.state
     const timerEle = this.timerStart()
     const {
       startOrpause,
@@ -94,6 +91,7 @@ class DigitalTimer extends Component {
                 <div className="flex-container">
                   <button
                     className="button-ele"
+                    type="button"
                     onClick={this.startTimerOrPause}
                   >
                     <img
